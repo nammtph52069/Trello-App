@@ -1,5 +1,3 @@
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
 import { useColorScheme } from '@mui/material/styles'
 
 import Box from '@mui/material/Box'
@@ -10,6 +8,7 @@ import Select from '@mui/material/Select'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import NightsStayIcon from '@mui/icons-material/NightsStay'
 import ContrastIcon from '@mui/icons-material/Contrast'
+import Container from '@mui/material/Container'
 
 function ModeSelect() {
   const { mode, setMode } = useColorScheme()
@@ -53,11 +52,40 @@ function ModeSelect() {
 
 function App() {
   return (
-    <>
-      <ModeSelect />
-      <Typography variant="body2" color="text.secondary"></Typography>
+    <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
+      {/* App Bar Wrapper */}
+      <Box sx={{
+        bgcolor: 'primary.light',
+        width: '100%',
+        height: (theme) => theme.trello.appBarHeight,
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <ModeSelect />
+      </Box>
 
-    </>
+      {/* Board Bar Wrapper */}
+      <Box sx={{
+        bgcolor: 'primary.dark',
+        width: '100%',
+        height: (theme) => theme.trello.boardBarHeight,
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        Board Bar
+      </Box>
+
+      {/* Board Content Wrapper */}
+      <Box sx={{
+        backgroundColor: 'primary.main',
+        width: '100%',
+        height: (theme) => theme.trello.boardContentHeight,
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        Board Content
+      </Box>
+    </Container>
   )
 }
 
