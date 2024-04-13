@@ -17,25 +17,41 @@ import ContentPasteIcon from '@mui/icons-material/ContentPaste'
 import AddCardIcon from '@mui/icons-material/AddCard'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import ListCards from './ListCards/ListCards'
+import { mapOrder } from '~/utils/sorts'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
-function Columns() {
+function Columns({ column }) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: column._id, data: { ...column } })
+  const dndkitColumnStyles = {
+    touchAction: 'none',
+    transform: CSS.Translate.toString(transform),
+    transition
+  }
 
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const handleClick = (event) => { setAnchorEl(event.currentTarget) }
   const handleClose = () => { setAnchorEl(null) }
 
+  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
 
   return (
-    <Box sx={{
-      minWidth: '300px',
-      maxWidth: '300px',
-      bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#333643' : '#ebecf0'),
-      ml: 2,
-      borderRadius: '6px',
-      height: 'fit-content',
-      maxHeight: (theme) => `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5)})`
-    }}>
+    <Box
+      ref={setNodeRef}
+      style={dndkitColumnStyles}
+      {...attributes}
+      {...listeners}
+      sx={{
+        minWidth: '300px',
+        maxWidth: '300px',
+        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#333643' : '#ebecf0'),
+        ml: 2,
+        borderRadius: '6px',
+        height: 'fit-content',
+        maxHeight: (theme) => `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5)})`
+      }}
+    >
 
       {/* ===== Card Title ===== */}
       <Box sx={{
@@ -50,7 +66,7 @@ function Columns() {
           fontSize: '1rem',
           cursor: 'pointer'
         }}>
-          Column Title
+          {column?.title}
         </Typography>
         <Box>
           <Tooltip title="More option">
@@ -110,7 +126,7 @@ function Columns() {
       </Box>
 
       {/* ===== Card Content ===== */}
-      <ListCards />
+      <ListCards cards={orderedCards} />
 
       {/* ===== Card Footer ===== */}
       <Box sx={{
